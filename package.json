@@ -1,0 +1,12 @@
+{
+  "name": "get-items-dmarket",
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "better-sqlite3": "^11.0.0"
+  },
+  "scripts": {
+    "dmarket": "node dmarket.js",
+    "whitemarket": "node whitemarket.js"
+  }
+}
