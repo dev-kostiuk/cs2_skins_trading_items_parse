@@ -79,8 +79,8 @@ node whitemarket.js
 | `DMARKET_FETCH_TOTAL_TIMEOUT_MS` | `30000` | Таймаут запиту (мс) |
 | `DMARKET_LOOP_SLEEP_MS` | `60000` | Пауза між повними циклами (мс). За замовч: 1 хв |
 | `DMARKET_EMPTY_SLEEP_MS` | `300000` | Пауза коли немає даних (мс). За замовч: 5 хв |
-| `DMARKET_ITEMS_DB_PATH` | `../cs2_skins_trading_database/items.db` | Шлях до загальної БД айтемів |
-| `DMARKET_ITEMS_DMARKET_DB_PATH` | `../cs2_skins_trading_database/items_dmarket.db` | Шлях до БД DMarket айтемів |
+| `DMARKET_ITEMS_DB_PATH` | `../database/items.db` | Шлях до загальної БД айтемів |
+| `DMARKET_ITEMS_DMARKET_DB_PATH` | `../database/items_dmarket.db` | Шлях до БД DMarket айтемів |
 | `DMARKET_BUSY_TIMEOUT_MS` | `5000` | SQLite busy timeout |
 
 ### WhiteMarket
@@ -93,8 +93,8 @@ node whitemarket.js
 | `WHITEMARKET_FETCH_TOTAL_TIMEOUT_MS` | `60000` | Таймаут запиту (мс) |
 | `WHITEMARKET_LOOP_SLEEP_MS` | `3600000` | Пауза між циклами (мс). За замовч: 1 година |
 | `WHITEMARKET_EMPTY_SLEEP_MS` | `3600000` | Пауза коли порожньо (мс) |
-| `WHITEMARKET_ITEMS_DB_PATH` | `../cs2_skins_trading_database/items.db` | Шлях до загальної БД |
-| `WHITEMARKET_ITEMS_WHITEMARKET_DB_PATH` | `../cs2_skins_trading_database/items_whitemarket.db` | Шлях до БД WM айтемів |
+| `WHITEMARKET_ITEMS_DB_PATH` | `../database/items.db` | Шлях до загальної БД |
+| `WHITEMARKET_ITEMS_WHITEMARKET_DB_PATH` | `../database/items_whitemarket.db` | Шлях до БД WM айтемів |
 | `WHITEMARKET_BUSY_TIMEOUT_MS` | `5000` | SQLite busy timeout |
 
 ---
@@ -124,13 +124,13 @@ pm2 stop items.config.cjs           # Зупинити обидва
 pm2 logs dmarket-items-daemon --lines 20
 
 # Скільки айтемів спарсено
-sqlite3 ../cs2_skins_trading_database/items_dmarket.db "SELECT COUNT(*) FROM items_dmarket;"
+sqlite3 ../database/items_dmarket.db "SELECT COUNT(*) FROM items_dmarket;"
 
 # Черга парсингу офферів
-sqlite3 ../cs2_skins_trading_database/items_dmarket.db "SELECT COUNT(*) as pending FROM items_dmarket WHERE offers_parsed=0;"
+sqlite3 ../database/items_dmarket.db "SELECT COUNT(*) as pending FROM items_dmarket WHERE offers_parsed=0;"
 
 # Скинути чергу (перепарсити всі оффери)
-sqlite3 ../cs2_skins_trading_database/items_dmarket.db "UPDATE items_dmarket SET offers_parsed=0;"
+sqlite3 ../database/items_dmarket.db "UPDATE items_dmarket SET offers_parsed=0;"
 
 # Перевірити помилки
 pm2 logs dmarket-items-daemon --err --lines 50
@@ -171,7 +171,7 @@ node items_whitemarket.js
 cd ..
 
 # 2. Потім клонуй та запусти items_parse
-git clone git@github.com:dev-kostiuk/cs2_skins_items_parse.git items_parse
+git clone git@github.com:dev-kostiuk/cs2_skins_trading_items_parse.git items_parse
 cd cs2_skins_trading_items_parse && npm install
 cp .env.example .env
 pm2 start items.config.cjs

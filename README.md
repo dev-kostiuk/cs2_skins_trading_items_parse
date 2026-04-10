@@ -79,8 +79,8 @@ Reads `.env` file with hot-reload — re-reads on file change without daemon res
 | `DMARKET_FETCH_TOTAL_TIMEOUT_MS` | `30000` | Request timeout (ms) |
 | `DMARKET_LOOP_SLEEP_MS` | `60000` | Sleep between full cycles (ms). Default: 1 min |
 | `DMARKET_EMPTY_SLEEP_MS` | `300000` | Sleep when no data returned (ms). Default: 5 min |
-| `DMARKET_ITEMS_DB_PATH` | `../cs2_skins_trading_database/items.db` | Path to general items DB |
-| `DMARKET_ITEMS_DMARKET_DB_PATH` | `../cs2_skins_trading_database/items_dmarket.db` | Path to DMarket items DB |
+| `DMARKET_ITEMS_DB_PATH` | `../database/items.db` | Path to general items DB |
+| `DMARKET_ITEMS_DMARKET_DB_PATH` | `../database/items_dmarket.db` | Path to DMarket items DB |
 | `DMARKET_BUSY_TIMEOUT_MS` | `5000` | SQLite busy timeout |
 
 ### WhiteMarket
@@ -93,8 +93,8 @@ Reads `.env` file with hot-reload — re-reads on file change without daemon res
 | `WHITEMARKET_FETCH_TOTAL_TIMEOUT_MS` | `60000` | Request timeout (ms) |
 | `WHITEMARKET_LOOP_SLEEP_MS` | `3600000` | Sleep between cycles (ms). Default: 1 hour |
 | `WHITEMARKET_EMPTY_SLEEP_MS` | `3600000` | Sleep when empty (ms) |
-| `WHITEMARKET_ITEMS_DB_PATH` | `../cs2_skins_trading_database/items.db` | Path to general items DB |
-| `WHITEMARKET_ITEMS_WHITEMARKET_DB_PATH` | `../cs2_skins_trading_database/items_whitemarket.db` | Path to WM items DB |
+| `WHITEMARKET_ITEMS_DB_PATH` | `../database/items.db` | Path to general items DB |
+| `WHITEMARKET_ITEMS_WHITEMARKET_DB_PATH` | `../database/items_whitemarket.db` | Path to WM items DB |
 | `WHITEMARKET_BUSY_TIMEOUT_MS` | `5000` | SQLite busy timeout |
 
 ---
@@ -124,13 +124,13 @@ pm2 stop items.config.cjs           # Stop both
 pm2 logs dmarket-items-daemon --lines 20
 
 # Check how many items parsed
-sqlite3 ../cs2_skins_trading_database/items_dmarket.db "SELECT COUNT(*) FROM items_dmarket;"
+sqlite3 ../database/items_dmarket.db "SELECT COUNT(*) FROM items_dmarket;"
 
 # Check parsing queue
-sqlite3 ../cs2_skins_trading_database/items_dmarket.db "SELECT COUNT(*) as pending FROM items_dmarket WHERE offers_parsed=0;"
+sqlite3 ../database/items_dmarket.db "SELECT COUNT(*) as pending FROM items_dmarket WHERE offers_parsed=0;"
 
 # Reset queue (force re-parse all offers)
-sqlite3 ../cs2_skins_trading_database/items_dmarket.db "UPDATE items_dmarket SET offers_parsed=0;"
+sqlite3 ../database/items_dmarket.db "UPDATE items_dmarket SET offers_parsed=0;"
 
 # Check for errors
 pm2 logs dmarket-items-daemon --err --lines 50
@@ -171,7 +171,7 @@ node items_whitemarket.js
 cd ..
 
 # 2. Then clone and run items_parse
-git clone git@github.com:dev-kostiuk/cs2_skins_items_parse.git items_parse
+git clone git@github.com:dev-kostiuk/cs2_skins_trading_items_parse.git items_parse
 cd cs2_skins_trading_items_parse && npm install
 cp .env.example .env
 pm2 start items.config.cjs
